@@ -20,7 +20,7 @@ bot.remove_command('help')
 async def on_ready():
 
     # place the information needed into a file
-    writer = open("text files\\indentification.txt", "w")
+    writer = open("text files\\identification.txt", "w")
     # show confirmation of login
     print("Logged in as {0.user}!".format(bot))
 
@@ -199,9 +199,6 @@ async def on_message_edit(before, after):
     log.write("-----------------------\n")
     log.close()
 
-@bot.event
-async def on_message_delete(message):
-    log
 
 @bot.command()
 # this is a command that displays commands that users can make toad do
