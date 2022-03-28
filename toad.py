@@ -389,4 +389,4 @@ async def insult(ctx, target: str = None):
         else:
             await ctx.send("i don't know who this person is")        
                 
-bot.run('ODI0MzI5MDAyMjcyNTU1MDg4.YFtyNQ.LTQLieqvOKg4-YaoCyunM80ziyc')
+bot.run('token')
