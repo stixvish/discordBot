@@ -113,6 +113,95 @@ async def on_message(message):
     # after this def, run commands
     await bot.process_commands(message)
 
+# edits need to be reflected in the log
+@bot.event
+async def on_message_edit(before, after):
+
+    # file to write onto
+    log = open("text files\\" + str(before.guild) + " log.txt", "a")
+    log.write("-----------------------\n")
+    log.write(str(before.author) + " HAS EDITED THEIR MESSAGE\n")
+
+    log.write("before: " + str(before.content) + "\n") # original message
+
+    # does the before message have embeds?
+    numEmbeds = len(before.embeds)
+    while numEmbeds > 0:
+
+        # update counter
+        numEmbeds = numEmbeds - 1
+
+        # title empty?
+        titleCon = before.embeds[numEmbeds].title
+        if titleCon == discord.Embed.Empty:
+            titleCon = "No Title" # placeholder text
+        else:
+            titleCon = str(before.embeds[numEmbeds].title) # whatever the actual title is
+
+        # description empty?
+        descriptionCon = before.embeds[numEmbeds].description
+        if descriptionCon == discord.Embed.Empty:
+            descriptionCon = "No Description" # placeholder text
+        else:
+            descriptionCon = str(before.embeds[numEmbeds].description) # whatever the actual description is
+
+        log.write("-------\nEmbed Title:\n" + titleCon + \
+            "\n-------\nEmbed Description:\n" + descriptionCon + "\n-------\n")
+        
+    # does the message have attachments?
+    numAttachments = len(before.attachments)
+    while numAttachments > 0:
+
+        # update counter
+        numAttachments = numAttachments - 1
+
+        # log it
+        log.write("Attachments: " + str(before.attachments[numAttachments].filename) + ", " \
+            + str(before.attachments[numAttachments].url) + "\n")
+
+    log.write("after: " + str(after.content) + "\n") # edited message
+
+    # does the message have embeds?
+    numEmbeds = len(after.embeds)
+    while numEmbeds > 0:
+
+        # update counter
+        numEmbeds = numEmbeds - 1
+
+        # title empty?
+        titleCon = after.embeds[numEmbeds].title
+        if titleCon == discord.Embed.Empty:
+            titleCon = "No Title" # placeholder text
+        else:
+            titleCon = str(after.embeds[numEmbeds].title) # whatever the actual title is
+
+        # description empty?
+        descriptionCon = after.embeds[numEmbeds].description
+        if descriptionCon == discord.Embed.Empty:
+            descriptionCon = "No Description" # placeholder text
+        else:
+            descriptionCon = str(after.embeds[numEmbeds].description) # whatever the actual description is
+
+        log.write("-------\nEmbed Title:\n" + titleCon + \
+            "\n-------\nEmbed Description:\n" + descriptionCon + "\n-------\n")
+        
+    # does the message have attachments?
+    numAttachments = len(after.attachments)
+    while numAttachments > 0:
+
+        # update counter
+        numAttachments = numAttachments - 1
+
+        # log it
+        log.write("Attachment: " + str(after.attachments[numAttachments].filename) + ", " \
+            + str(after.attachments[numAttachments].url) + "\n")
+    
+    log.write("-----------------------\n")
+    log.close()
+
+@bot.event
+async def on_message_delete(message):
+    log
 
 @bot.command()
 # this is a command that displays commands that users can make toad do
@@ -303,4 +392,4 @@ async def insult(ctx, target: str = None):
         else:
             await ctx.send("i don't know who this person is")        
                 
-bot.run('ODI0MzI5MDAyMjcyNTU1MDg4.YFtyNQ.tM1I5iysODEk-KddWF9gaKa1Ry4')
+bot.run('ODI0MzI5MDAyMjcyNTU1MDg4.YFtyNQ.LTQLieqvOKg4-YaoCyunM80ziyc')
