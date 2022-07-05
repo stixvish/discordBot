@@ -2,6 +2,7 @@
 import discord # discord bot
 from discord.ext import commands # to use commands
 import asyncio
+import helper
 
 # what is the purpose of this bot?
 descript = \
@@ -183,7 +184,7 @@ async def on_message_edit(before, after):
             descriptionCon = str(after.embeds[numEmbeds].description) # whatever the actual description is
 
         log.write("-------\nEmbed Title:\n" + titleCon + \
-            "\n-------\nEmbed Description:\n" + descriptionCon + "\n-------\n")
+            "\nEmbed Description:\n" + descriptionCon + "\n-------\n")
         
     # does the message have attachments?
     numAttachments = len(after.attachments)
@@ -199,6 +200,53 @@ async def on_message_edit(before, after):
     log.write("-----------------------\n")
     log.close()
 
+@bot.event
+async def on_message_delete(message):
+
+    # file to write onto
+    log = open("text files\\" + str(message.guild) + " log.txt", "a")
+    log.write("-----------------------\n")
+    log.write(str(message.author) + " HAS DELETED THEIR MESSAGE\n")
+
+    log.write("message: " + str(message.content) + "\n") # original message
+
+    # did the deleted message have embeds?
+    numEmbeds = len(message.embeds)
+    while numEmbeds > 0:
+
+        # update counter
+        numEmbeds = numEmbeds - 1
+
+        # title empty?
+        titleCon = message.embeds[numEmbeds].title
+        if titleCon == discord.Embed.Empty:
+            titleCon = "No Title" # placeholder text
+        else:
+            titleCon = str(message.embeds[numEmbeds].title) # whatever the actual title is
+
+        # description empty?
+        descriptionCon = message.embeds[numEmbeds].description
+        if descriptionCon == discord.Embed.Empty:
+            descriptionCon = "No Description" # placeholder text
+        else:
+            descriptionCon = str(message.embeds[numEmbeds].description) # whatever the actual description is
+
+        log.write("-------\nEmbed Title:\n" + titleCon + \
+            "\n-------\nEmbed Description:\n" + descriptionCon + "\n-------\n")
+        
+    # does the message have attachments?
+    numAttachments = len(message.attachments)
+    while numAttachments > 0:
+
+        # update counter
+        numAttachments = numAttachments - 1
+
+        # log it
+        log.write("Attachments: " + str(message.attachments[numAttachments].filename) + ", " \
+            + str(message.attachments[numAttachments].url) + "\n")
+
+    log.write("-----------------------\n")
+    log.close()
 
 @bot.command()
 # this is a command that displays commands that users can make toad do
@@ -327,7 +375,7 @@ async def insult(ctx, target: str = None):
             await ctx.send("i don't know who this person is")
     
     # the person was @-ed to insult
-    elif target[:3] == "<@!":
+    elif target[:2] == "<@" and target[-1:] == ">":
 
         # @ the target and say insults
         await ctx.send(target + " im about to get on your ass")
@@ -388,5 +436,6 @@ async def insult(ctx, target: str = None):
         # string is not a nickname nor a government name
         else:
             await ctx.send("i don't know who this person is")        
-                
-bot.run('token')
+
+config = helper.read_config()
+bot.run(config['RunTime']['key'])
